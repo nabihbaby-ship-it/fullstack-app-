@@ -16,6 +16,7 @@ const [jobs, setjobs] = useState<Job[]>([])
 const [email, setemail] = useState<string>("")
 const [password, setpassword] = useState<string>("")
 
+const API = "https://my-fullstack-app-production-30fe.up.railway.app"
 
 const addjob = async () => {
 
@@ -26,20 +27,26 @@ job: job,
 status: "pendent"
 }
 
-const response = await fetch("/api/jobs", {
+const token = localStorage.getItem("token")
+
+const response = await fetch(`${API}/api/jobs`, {
 
 method: "POST",
 headers: {
-"content-type" : "application/json"
+"content-type" : "application/json",
+Authorization: `Bearer ${token}`
 },
 
 body: JSON.stringify(newjob)
 
 })
 
+
 const data = await response.json()
 
-setjobs(data)
+console.log(data)
+
+setjobs([...jobs, newjob])
 
 }
 
@@ -47,7 +54,7 @@ useEffect(()=> {
 
 const getjobs = async () => {
 
-const response = await fetch("/api/jobs", {
+const response = await fetch(`${API}/api/jobs`, {
 
 method: "get",
 headers: {
@@ -68,7 +75,7 @@ getjobs()
 
 const beruf = async () => {
 
-const response = await fetch("/api/jobs", {
+const response = await fetch(`${API}/api/jobs`, {
 method: "POST",
 headers: {
 "content-type" : "application/json"
@@ -87,7 +94,7 @@ const register = async () => {
 
     if (password === "") {return "bitte passwort eingeben"}
 
-    const response = await fetch("/api/register", {
+    const response = await fetch(`${API}/api/register`, {
 
     headers: {"Content-type": "application/json"},
 
@@ -97,7 +104,7 @@ const register = async () => {
     })
 
     if (!response.ok) {
-    console.log("registrieren fehlgeschlagen")
+    console.log("reg istrieren fehlgeschlagen")
     return
     }
 
@@ -114,7 +121,7 @@ const login = async () => {
 
 try{
 
-const response = await fetch("/api/login", {
+const response = await fetch("${API}/api/login", {
 
 headers: {"Content-type": "application/json"},
 
@@ -151,18 +158,6 @@ if (err) {console.error(err)}
 }
 }
 
-const hinzufügen = () => {
-
-const newjob = {
-
-company: company,
-job: job, 
-status: ""
-}
-
-setjobs([...jobs, newjob])
-}
-
 return(
 <> 
 
@@ -184,7 +179,7 @@ onChange={(e) => setcompany(e.target.value)}/>
 
 {jobs.map(job => job.job)}
 
-<button onClick={hinzufügen}>hinzufügen</button>
+<button onClick={addjob}>hinzufügen</button>
 
 <button onClick={register}>registrieren</button>
 

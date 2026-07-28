@@ -1,34 +1,67 @@
+const login = document.getElementById("login")
+const job = document.getElementById("job")
+
+
+chrome.storage.local.get("token", (data) => {if (data.token){ 
+
+  job.style.display = "block";
+
+}
+
+else {
+
+  login.style.display = "block"
+}})
+
+
 
 const getJobFromLinkedIn = () => {
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
 
-    const tab = tabs[0];
-    if (!tab?.id) return;
+  chrome.storage.local.get("token", async (search) => {
 
-    chrome.tabs.sendMessage(
-      tab.id,
-      { type: "GET_JOB" },
-      async (response) => {
+    const token = search.token;
 
-        if(!response) return
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
 
-           console.log("response:", response)
+      const tab = tabs[0];
+      if (!tab?.id) return;
 
-           const apiresponse = await fetch("/api/jobs", {
-          
-            method: "POST", 
-            headers: {"content-type" : "application/json"},
+      chrome.tabs.sendMessage(
+        tab.id,
+        { type: "GET_JOB" },
+        async (response) => {
 
-             body: JSON.stringify(response)
-           }),
+          if (!response) return;
 
-          const data = await apiresponse.json()
-          
-        console.log(data)
+          console.log("response:", response);
 
-      }
-    );
+          const apiresponse = await fetch(
+            "https://dein-backend.up.railway.app/api/jobs",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`
+              },
+              body: JSON.stringify(response)
+            }
+          );
+
+          if(!apiresponse.ok) {
+          console.log("fehler beim speichern")
+          return
+          }
+
+          const data = await apiresponse.json();
+
+          console.log(data);
+
+        }
+      );
+    });
+
   });
+
 };
 
 document.getElementById("test").addEventListener("click", getJobFromLinkedIn)

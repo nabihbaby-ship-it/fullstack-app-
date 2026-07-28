@@ -1,27 +1,60 @@
-import pool from "./db.js"
+import express from "express";
+import cors from "cors";
+import pool from "./db.js";
 
-pool.query("SELECT NOW()")
-.then((result) => {
-console.log(result.rows)
+const app = express();
+
+app.use(cors({
+  origin: [
+    "http://localhost:4173",
+    "https://fullstack-app-pi-eight.vercel.app"
+  ]
+}));
+
+app.use(express.json());
+
+function verifytoken (req, res, next) {
+
+const authheader = req.headers.authorization;
+
+if(!authheader) {
+return res.status(401).json({
+message: "kein token vorhanden"
+});
+}
+
+const token = authheader.split(" ")[1];
+
+try{
+
+const decoded = jwt.verifytoken(token, "secret key"); 
+
+req.user = decoded
+
+next();
+}
+
+catch(err) {return res.status(401).json({message: "ungültiger token"})}
+}
+
+app.post("/api/jobs", verifytoken, async (req, res) => {
+
+const { company, job, status } = req.body;
+const result = await pool.query(
+`
+INSERT INTO jobs (job, company, status)
+VALUES ($1, $2, $3)
+RETURNING *;
+`,
+[job, company, status]
+);
+
+res.json(result.rows[0]);
 })
-.catch((err) => {
-console.error(err)
-})
 
-app.post("/api/jobs", async (req, res) => {
+app.get("/api/jobs", verifytoken, async (req, res) => {
 
-const { company, job, status} = req.body;
-
-const result = await pool.query(`INSERT INTO jobs (job, company, status)
-    values($1, $2, $3)`,
-[job, company, status]);
-
-res.json(result.rows[0])
-})
-
-app.get("/api/jobs", async (req, res) => {
-
-const result = await pool.query("SELECT * FROM jobs")
+const result = await pool.query("SELECT * FROM jobs WHERE user_id = $1")
 
 res.json(result.rows)
 })
@@ -30,32 +63,35 @@ app.post("/api/register", async (req, res) => {
 
 const {email, password} = req.body
 
-if (!email || !password ) {return res.status(400).json({message: "email oder passwort fehlt"})}
+if(!email  || !password) {
 
-const hashedpassword = await bcrypt.hash(password, 10)
-
-res.json({message: "user erstellt",
-    hashedpassword
-})
-})
-
-app.post("/api/register", async (req, res) => {
-
-const {email, password} = req.body
-
-const hashedpassword = await bcrypt.hash(password, 10)
-
-db.run("insert into users (email, password) values (?, ?)",
-[email, hashedpassword],
-function(err) {
-
-if (err) {
-return res.status(400).json({message: "user existiert bereits"})
+return res.status(400).json({message: "email oder passwort fehlt"})
 }
 
-res.json({message: "user erstellt"})
+const hashedpassword = await bcrypt.hash(password, 10);
+ 
+try {
+  await pool.query(
+    "INSERT INTO users (email, password) VALUES ($1, $2)",
+    [email, hashedpassword]
+  );
+
+  res.json({ message: "User erstellt" });
+
+} 
+
+catch (err) {
+
+  if (err.code === "23505") {
+    return res.status(409).json({
+      message: "E-Mail wird bereits verwendet"
+    });
+  }
+
+  res.status(500).json({
+    message: "Serverfehler"
+  });
 }
-)
 
 })
 
@@ -63,10 +99,15 @@ app.post("/api/login", async (req, res) => {
 
 const {email, password} = req.body
 
-const user = {
-id: 1,
-email: "test@test.com",
-password: "jghhdasujihouigh"
+const result = await pool.query("SELECT * FROM users WHERE email = $1",
+[email]
+)
+
+if(!result) {
+
+return res.status(401).json({
+message: "User nicht gefunden"
+});
 }
 
 if (user.email !== email) {
@@ -90,16 +131,10 @@ const token = jwt.sign(
 )
 
 res.json({message: "login erreicht",
-token: token
+token: token,
+user: user
 })
 
-})
-
-app.post("/api/jobs", (req, res) => {
-
-res.json({
-success: true
-})
 })
 
 const PORT = process.env.PORT || 5000
