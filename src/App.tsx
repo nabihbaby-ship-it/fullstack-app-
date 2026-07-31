@@ -11,7 +11,6 @@ function App () {
 
 const [company, setcompany] = useState<string>("")
 const [job, setjob] = useState<string>("")
-const [status, setstatus] = useState<string>("")
 const [jobs, setjobs] = useState<Job[]>([])
 const [email, setemail] = useState<string>("")
 const [password, setpassword] = useState<string>("")
@@ -160,11 +159,6 @@ if (err) {console.error(err)}
 
 return(
 <> 
-
-<input type="text"
-placeholder="status"
-value={status}
-onChange={(e) => setstatus(e.target.value)} />
 
 <input type="text"
 placeholder="job"
