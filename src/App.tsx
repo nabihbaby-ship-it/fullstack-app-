@@ -51,28 +51,39 @@ setjobs([...jobs, newjob])
 
 }
 
-useEffect(()=> {
+useEffect(() => {
+  const getJobs = async () => {
+    try {
+      const token = localStorage.getItem("token");
 
-const getjobs = async () => {
+      if (!token) {
+        console.log("Kein Token vorhanden");
+        return;
+      }
 
-const response = await fetch(`${API}/api/jobs`, {
+      const response = await fetch(`${API}/api/jobs`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
 
-method: "get",
-headers: {
-"content-type" : "application/json"
-},
-})
+      const data = await response.json();
 
-const data = await response.json()
+      if (!response.ok) {
+        console.error(data.message);
+        return;
+      }
 
-console.log(data)
+      console.log(data);
+      setjobs(data);
+    } catch (error) {
+      console.error("Jobs konnten nicht geladen werden:", error);
+    }
+  };
 
-setjobs(data)
-}
-
-getjobs()
-
-},[]);
+  getJobs();
+}, []);
 
 const beruf = async () => {
 
