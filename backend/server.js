@@ -6,13 +6,17 @@ import bcrypt from "bcryptjs"
 
 const app = express();
 
+const allowedOrigins = [
+  "http://localhost:4173",
+  "http://localhost:5173",
+  "https://fullstack-app-pi-eight.vercel.app"
+];
+
 app.use(
   cors({
-    origin: [
-      "http://localhost:4173",
-      "http://localhost:5173",
-      "https://fullstack-app-pi-eight.vercel.app"
-    ]
+    origin: allowedOrigins,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"]
   })
 );
 
