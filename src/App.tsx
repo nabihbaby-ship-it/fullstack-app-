@@ -3,7 +3,7 @@ import { useEffect, useState } from "react"
 type Job = {
 
 company: string,
-job: string,
+title: string,
 status: string
 }
 
@@ -22,7 +22,7 @@ const addjob = async () => {
 const newjob = {
 
 company: company,
-job: job,
+title: job,
 status: "pendent"
 }
 
@@ -148,7 +148,6 @@ setpassword("")
 console.log(data)
 
 if (data.token) {
-
 localStorage.setItem("token", data.token)
 }
 }
@@ -173,7 +172,7 @@ placeholder="company"
 value={company}
 onChange={(e) => setcompany(e.target.value)}/>
 
-{jobs.map(job => job.job)}
+{jobs.map(job => job.title)}
 
 <button onClick={addjob}>hinzufügen</button>
 

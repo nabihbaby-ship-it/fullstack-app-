@@ -1,6 +1,5 @@
 import express from "express";
 import cors from "cors";
-import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import pool from "./db.js";
 import bcrypt from "bcryptjs"
@@ -44,7 +43,7 @@ function verifyToken(req, res, next) {
 
 app.post("/api/jobs", verifyToken, async (req, res) => {
   try {
-    const { company, job, status } = req.body;
+    const { company, title, status } = req.body;
 
     if (!company || !job || !status) {
       return res.status(400).json({
@@ -54,11 +53,11 @@ app.post("/api/jobs", verifyToken, async (req, res) => {
 
     const result = await pool.query(
       `
-      INSERT INTO jobs (user_id, job, company, status)
+      INSERT INTO jobs (user_id, title, company, status)
       VALUES ($1, $2, $3, $4)
       RETURNING *;
       `,
-      [req.user.id, job, company, status]
+      [req.user.id, title, company, status]
     );
 
     return res.status(201).json(result.rows[0]);
@@ -152,7 +151,7 @@ app.post("/api/login", async (req, res) => {
 
     const result = await pool.query(
       `
-      SELECT id, email, password, username
+      SELECT id, email, password, 
       FROM users
       WHERE email = $1
       `,
@@ -192,7 +191,6 @@ app.post("/api/login", async (req, res) => {
       user: {
         id: user.id,
         email: user.email,
-        username: user.username
       }
     });
   } catch (err) {
