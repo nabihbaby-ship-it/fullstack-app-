@@ -28,6 +28,8 @@ status: "pendent"
 
 const token = localStorage.getItem("token")
 
+console.log("hallo")
+
 const response = await fetch(`${API}/api/jobs`, {
 
 method: "POST",
