@@ -9,7 +9,8 @@ const app = express();
 const allowedOrigins = [
   "http://localhost:4173",
   "http://localhost:5173",
-  "https://fullstack-app-pi-eight.vercel.app"
+  "https://fullstack-app-pi-eight.vercel.app",
+  "https://fullstack-ni2clfq4d-youssoufs-projects-007b61b2.vercel.app"
 ];
 
 app.use(
