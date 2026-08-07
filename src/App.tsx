@@ -166,7 +166,7 @@ return (
         <p className="subtitle">
           Speichere Jobs, verwalte deinen Status und behalte den Überblick.
         </p>
-        <p className="toggle">{toggle && "bitte melden sie sich an "}</p>
+        <p className="toggle">{toggle && "bitte melden sie sich an um jobs zu speichern "}</p>
       </div>
 
       <div className="formGroup">
