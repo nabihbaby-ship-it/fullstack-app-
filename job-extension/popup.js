@@ -1,6 +1,7 @@
 
 const login = document.getElementById("login");
 const job = document.getElementById("job");
+const popup = document.getElementById("popupnachricht")
 
 const API = "https://dein-backend.up.railway.app";
 
@@ -79,6 +80,7 @@ const response = await fetch(`${API}/api/login`, {
 
   if(!response.ok) {
   console.error("login fehlgeschlagen")
+
   return
   }
 
