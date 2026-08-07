@@ -113,7 +113,7 @@ const register = async () => {
 
     if (!response.ok) {
     console.log("registrieren fehlgeschlagen")
-    console.log("response.status")
+    console.log(response.status)
     console.log(response)
     return
     }
