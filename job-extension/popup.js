@@ -1,6 +1,8 @@
-const login = document.getElementById("login")
-const job = document.getElementById("job")
 
+const login = document.getElementById("login");
+const job = document.getElementById("job");
+
+const API = "https://dein-backend.up.railway.app";
 
 chrome.storage.local.get("token", (data) => {if (data.token){ 
 
@@ -13,14 +15,12 @@ else {
   login.style.display = "block"
 }})
 
-
-
 const getJobFromLinkedIn = () => {
 
   chrome.storage.local.get("token", async (search) => {
 
     const token = search.token;
-
+ 
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
 
       const tab = tabs[0];
@@ -64,6 +64,45 @@ const getJobFromLinkedIn = () => {
 
 };
 
-document.getElementById("test").addEventListener("click", getJobFromLinkedIn)
+const getin = async () => {
+
+const password = document.getElementById("password").value
+const email = document.getElementById("email").value
+
+const response = await fetch(`${API}/api/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ email, password })
+    });
+
+  if(!response.ok) {
+  console.error("login fehlgeschlagen")
+  return
+  }
+
+  const data = await response.json()
+
+  const token = data.token
+
+  if(!token){
+
+  console.error("token nicht verfügbar")
+  return
+  }
+
+  chrome.storage.local.set({token})
+
+  login.style.display = "none"
+
+  job.style.display = "block"
+
+  console.log("eingeloggt")
+}
+
+document.getElementById("savejob").addEventListener("click", getJobFromLinkedIn)
+
+document.getElementById("loginbutton").addEventListener("click", getin)
 
 

@@ -9,8 +9,12 @@ const title =
   document.querySelector("h1")?.innerText ||
   "";
 
+  const company = document.querySelector("") || ""
+
 return{
-title
+title,
+company: company ,
+status: "saved"
 }
 
 }
@@ -25,13 +29,19 @@ const source = window.location.hostname
     
 const company = document.querySelector(".job-details-jobs-unified-top-card__company-name")?.textContent?.trim() || ""  
 
+if(!job) {
+
+console.log("kein jobtitel gefunden")
+return null
+}
+
 return{
-job,
+title: job,
 url,
 source,
 company,
 status: "saved",
-createdad: Date.now()
+createdat: Date.now()
 }
 }
 

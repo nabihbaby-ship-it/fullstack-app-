@@ -49,7 +49,7 @@ app.post("/api/jobs", verifyToken, async (req, res) => {
   try {
     const { company, title, status } = req.body;
 
-    if (!company || !job || !status) {
+    if (!company || !title || !status) {
       return res.status(400).json({
         message: "Firma, Job und Status werden benötigt"
       });
@@ -115,16 +115,31 @@ app.post("/api/register", async (req, res) => {
     const normalizedEmail = email.trim().toLowerCase();
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    await pool.query(
+    const result = await pool.query(
       `
       INSERT INTO users (email, password)
       VALUES ($1, $2)
+      RETURNING id, email
       `,
       [normalizedEmail, hashedPassword]
     );
 
+    const user = result.rows[0]
+
+    const token = jwt.sign({
+
+    id: user.id,
+    email: user.email
+    },
+    process.env.JWT_SECRET,
+    {
+    expiresIn: "7d"
+    }
+  )
+
     return res.status(201).json({
-      message: "User erstellt"
+      message: "User erstellt",
+      token
     });
   } catch (err) {
     console.error(err);
@@ -155,7 +170,7 @@ app.post("/api/login", async (req, res) => {
 
     const result = await pool.query(
       `
-      SELECT id, email, password, 
+      SELECT id, email, password
       FROM users
       WHERE email = $1
       `,
@@ -185,7 +200,7 @@ app.post("/api/login", async (req, res) => {
       },
       process.env.JWT_SECRET,
       {
-        expiresIn: "1h"
+        expiresIn: "7d"
       }
     );
 

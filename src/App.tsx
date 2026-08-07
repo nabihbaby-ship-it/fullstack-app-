@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import "./styles.css"
 
 type Job = {
 
@@ -14,6 +15,8 @@ const [job, setjob] = useState<string>("")
 const [jobs, setjobs] = useState<Job[]>([])
 const [email, setemail] = useState<string>("")
 const [password, setpassword] = useState<string>("")
+const [error, seterror] = useState<string>("")
+const [toggle, settoggle] = useState<boolean>(false)
 
 const API = "https://my-fullstack-app-production-30fe.up.railway.app"
 
@@ -28,7 +31,14 @@ status: "pendent"
 
 const token = localStorage.getItem("token")
 
-console.log("hallo")
+if(!token) {
+
+settoggle(true)
+
+return console.log("bitte melden sie sich an")
+}
+
+settoggle(false)
 
 const response = await fetch(`${API}/api/jobs`, {
 
@@ -85,21 +95,6 @@ useEffect(() => {
   getJobs();
 }, []);
 
-const beruf = async () => {
-
-const response = await fetch(`${API}/api/jobs`, {
-method: "POST",
-headers: {
-"content-type" : "application/json"
-},
-
-body: JSON.stringify(job)
-})
-
-console.log(response)
-
-}
-
 const register = async () => {
 
     if (email === "") {return "bitte email eingeben"}
@@ -130,76 +125,118 @@ const register = async () => {
 }
 
 const login = async () => {
+  try {
+    seterror("");
 
-try{
+    const response = await fetch(`${API}/api/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ email, password })
+    });
 
-const response = await fetch("${API}/api/login", {
+    const data = await response.json();
 
-headers: {"Content-type": "application/json"},
+    if (!response.ok) {
+      seterror(data.message || "Login fehlgeschlagen");
+      return;
+    }
 
-method: "POST",
+    localStorage.setItem("token", data.token);
 
-body: JSON.stringify({email, password})
+    setemail("");
+    setpassword("");
+    seterror("");
+  } catch (err) {
+    console.error(err);
+    seterror("Server nicht erreichbar");
+  }
+};
 
-})
+return (
 
-console.log(response)
-
-if (!response.ok) {
-
-    console.log("login fehlgeschlagen")
-    return
-}
-
-const data = await response.json()
-
-setemail("")
-setpassword("")
-
-console.log(data)
-
-if (data.token) {
-localStorage.setItem("token", data.token)
-}
-}
-
-catch(err) {
-
-if (err) {console.error(err)}
-}
-}
-
-return(
-<> 
-
-<input type="text"
-placeholder="job"
-value={job}
-onChange={(e) => setjob(e.target.value)} 
-/>
-
-<input type="text"
-placeholder="company"
-value={company}
-onChange={(e) => setcompany(e.target.value)}/>
-
-{jobs.map(job => job.title)}
-
-<button onClick={addjob}>hinzufügen</button>
-
-<button onClick={register}>registrieren</button>
-
-<button onClick={login}>login</button>
-
-<button onClick={addjob}>addjob</button>
-
-<button onClick={beruf}>beruf</button>
-
-</>
   
-)
+
+  <main className="page">
+    <section className="card">
+      <div className="header">
+        <p className="eyebrow">Job Tracker</p>
+        <h1>Deine Bewerbungen im Blick</h1>
+        <p className="subtitle">
+          Speichere Jobs, verwalte deinen Status und behalte den Überblick.
+        </p>
+        <p className="toggle">{toggle && "bitte melden sie sich an "}</p>
+      </div>
+
+      <div className="formGroup">
+        <input
+          type="text"
+          placeholder="Jobtitel"
+          value={job}
+          onChange={(e) => setjob(e.target.value)}
+        />
+
+        <input
+          type="text"
+          placeholder="Unternehmen"
+          value={company}
+          onChange={(e) => setcompany(e.target.value)}
+        />
+
+        <button className="primaryButton" onClick={addjob}>
+          Job hinzufügen
+        </button>
+      </div>
+
+      <div className="authGroup">
+        <input
+          type="email"
+          placeholder="E-Mail"
+          value={email}
+          onChange={(e) => setemail(e.target.value)}
+        />
+
+        <input
+          type="password"
+          placeholder="Passwort"
+          value={password}
+          onChange={(e) => setpassword(e.target.value)}
+        />
+
+        <button className="secondaryButton" onClick={register}>
+          Registrieren
+        </button>
+
+        <button className="ghostButton" onClick={login}>
+          Einloggen
+        </button>
+      </div>
+
+      {error && (
+      <p>{error}</p>
+      )}
+
+      <div className="jobs">
+        {jobs.map((job, index) => (
+          <article className="jobCard" key={index}>
+            <div>
+              <h2>{job.title}</h2>
+              <p>{job.company}</p>
+            </div>
+
+            <span>{job.status}</span>
+          </article>
+        ))}
+      </div>
+    </section>
+  </main>
+);
 }
 
 export default App
+
+
+
 
 
