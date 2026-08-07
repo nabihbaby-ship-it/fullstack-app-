@@ -17,7 +17,8 @@ const [email, setemail] = useState<string>("")
 const [password, setpassword] = useState<string>("")
 const [error, seterror] = useState<string>("")
 const [toggle, settoggle] = useState<boolean>(false)
-
+const [showpassword, setshowpassword] = useState<boolean>(false)
+ 
 const API = "https://my-fullstack-app-production-30fe.up.railway.app"
 
 const addjob = async () => {
@@ -111,7 +112,7 @@ const register = async () => {
     })
 
     if (!response.ok) {
-    console.log("reg istrieren fehlgeschlagen")
+    console.log("registrieren fehlgeschlagen")
     return
     }
 
@@ -198,11 +199,13 @@ return (
         />
 
         <input
-          type="password"
+          type={showpassword ? "text" : "password"}
           placeholder="Passwort"
           value={password}
           onChange={(e) => setpassword(e.target.value)}
         />
+
+        <button onClick={ () => setshowpassword(prev => !prev)}>{showpassword ? "verbergen" : "anzeigen"}</button>
 
         <button className="secondaryButton" onClick={register}>
           Registrieren
