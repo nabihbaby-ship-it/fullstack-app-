@@ -198,14 +198,6 @@ return (
           onChange={(e) => setemail(e.target.value)}
         />
 
-        <input
-          type={showpassword ? "text" : "password"}
-          placeholder="Passwort"
-          value={password}
-          onChange={(e) => setpassword(e.target.value)}
-        />
-
-        <button onClick={ () => setshowpassword(prev => !prev)}>{showpassword ? "verbergen" : "anzeigen"}</button>
 
         <button className="secondaryButton" onClick={register}>
           Registrieren
