@@ -66,7 +66,7 @@ const updateStatus = async (id: number, status: string) => {
 
 const addjob = async () => {
 
-if (!company && !job) {
+if (!company || !job) {
 
 return
 }
