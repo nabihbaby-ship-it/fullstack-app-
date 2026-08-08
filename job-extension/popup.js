@@ -3,7 +3,7 @@ const login = document.getElementById("login");
 const job = document.getElementById("job");
 const popup = document.getElementById("popupnachricht")
 
-const API = "https://dein-backend.up.railway.app";
+const API = "https://my-fullstack-app-production-30fe.up.railway.app";
 
 console.log(login)
 console.log(job)
@@ -77,6 +77,7 @@ const getJobFromLinkedIn = () => {
 };
 
 const getin = async () => {
+console.log("gestartet")
 
 const password = document.getElementById("password").value
 const email = document.getElementById("email").value
