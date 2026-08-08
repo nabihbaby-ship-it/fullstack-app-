@@ -5,6 +5,9 @@ const popup = document.getElementById("popupnachricht")
 
 const API = "https://dein-backend.up.railway.app";
 
+console.log(login)
+console.log(job)
+
 chrome.storage.local.get("token", (data) => {if (data.token){ 
 
   job.style.display = "block";
@@ -20,13 +23,13 @@ const getJobFromLinkedIn = () => {
 
   chrome.storage.local.get("token", async (search) => {
 
+     const token = search.token;
+
     if(!token) {
     
     console.log("kein token vorhanden")
     return
     }
-
-    const token = search.token;
  
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
 
@@ -38,9 +41,9 @@ const getJobFromLinkedIn = () => {
         { type: "GET_JOB" },
         async (response) => {
 
-          if (!response) 
+          if (!response) {
           console.log("keine daten von content script erhalten")
-          return;
+          return;}
 
           console.log("response:", response);
 
