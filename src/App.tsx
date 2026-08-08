@@ -226,7 +226,7 @@ return (
           {jobs.map((job) => (
 
             <article key={job.id}>
-              <h2>{job.title}</h2>
+              <h2 style={{color: "blue"}}>{job.title}</h2>
               <p style={{color: "blue"}}>{job.company}</p>
 
               <select
