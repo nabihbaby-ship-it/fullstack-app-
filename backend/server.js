@@ -1,4 +1,4 @@
-console.log("server gestartet")
+console.log("server gestartet bitte")
 
 import express from "express";
 import cors from "cors";
@@ -22,7 +22,7 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization"]
   })
 );
-
+   
 app.use(express.json());
 
 function verifyToken(req, res, next) {
