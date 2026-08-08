@@ -20,6 +20,12 @@ const getJobFromLinkedIn = () => {
 
   chrome.storage.local.get("token", async (search) => {
 
+    if(!token) {
+    
+    console.log("kein token vorhanden")
+    return
+    }
+
     const token = search.token;
  
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
@@ -32,12 +38,14 @@ const getJobFromLinkedIn = () => {
         { type: "GET_JOB" },
         async (response) => {
 
-          if (!response) return;
+          if (!response) 
+          console.log("keine daten von content script erhalten")
+          return;
 
           console.log("response:", response);
 
           const apiresponse = await fetch(
-            "https://dein-backend.up.railway.app/api/jobs",
+            `${API}/api/jobs`,
             {
               method: "POST",
               headers: {
