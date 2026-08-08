@@ -204,8 +204,6 @@ return (
   <>
     {token ? (
       <div>
-        <h1>Dashboard</h1>
-
         <input
           type="text"
           placeholder="Jobtitel"
@@ -213,10 +211,12 @@ return (
           onChange={(e) => setjob(e.target.value)}
         />
 
-        <input type="text" 
-        placeholder="company"
-        value={company}
-        onChange={(e) => setcompany(e.target.value)}/>
+        <input
+          type="text"
+          placeholder="company"
+          value={company}
+          onChange={(e) => setcompany(e.target.value)}
+        />
 
         <button onClick={addjob}>
           Job hinzufügen
@@ -226,10 +226,22 @@ return (
           {jobs.map((job) => (
             <article key={job.id}>
               <h2>{job.title}</h2>
-               <button onClick={() => deletejob(job.id)}>delete</button>
+              <p>{job.company}</p>
 
-               <button onClick={() => updateStatus(job.id, job.status)}>status ändern</button>
+              <select
+                value={job.status}
+                onChange={(e) =>
+                  updateStatus(job.id, e.target.value)
+                }
+              >
+                <option value="pendent">Pendent</option>
+                <option value="interview">Interview</option>
+                <option value="absage">Absage</option>
+              </select>
 
+              <button onClick={() => deletejob(job.id)}>
+                delete
+              </button>
             </article>
           ))}
         </div>
@@ -250,7 +262,9 @@ return (
           onChange={(e) => setpassword(e.target.value)}
         />
 
-        <button onClick={() => !setshowpassword}>toggle</button>
+        <button onClick={() => setshowpassword(prev => !prev)}>
+          {showpassword ? "verbergen" : "anzeigen"}
+        </button>
 
         <button onClick={register}>
           Registrieren
@@ -260,9 +274,7 @@ return (
           Einloggen
         </button>
 
-        {error &&(
-        <p>{error}</p>
-        ) }
+        {error && <p>{error}</p>}
       </div>
     )}
   </>

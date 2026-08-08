@@ -187,3 +187,13 @@ color: red;
     border-right-color: var(--border);
   }
 }
+
+h2 {
+
+color: black;
+}
+
+p {
+
+  color: black;
+}
