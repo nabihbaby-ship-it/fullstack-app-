@@ -227,7 +227,7 @@ return (
 
             <article key={job.id}>
               <h2>{job.title}</h2>
-              <p>{job.company}</p>
+              <p style={{color: "blue"}}>{job.company}</p>
 
               <select
                 value={job.status}
