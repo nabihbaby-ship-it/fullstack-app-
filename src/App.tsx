@@ -20,7 +20,8 @@ const [error, seterror] = useState<string>("")
 const [toggle, settoggle] = useState<boolean>(false)
 const [showpassword, setshowpassword] = useState<boolean>(false)
 
- 
+ const token = localStorage.getItem("token")
+
 const API = "https://my-fullstack-app-production-30fe.up.railway.app"
 
 
@@ -199,19 +200,11 @@ const login = async () => {
 };
 
 return (
+  <>
+    {token ? (
+      <div>
+        <h1>Dashboard</h1>
 
-  <main className="page">
-    <section className="card">
-      <div className="header">
-        <p className="eyebrow">Job Tracker</p>
-        <h1>Deine Bewerbungen im Blick</h1>
-        <p className="subtitle">
-          Speichere Jobs, verwalte deinen Status und behalte den Überblick.
-        </p>
-        <p className="toggle">{toggle && "bitte melden sie sich an um jobs zu speichern "}</p>
-      </div>
-
-      <div className="formGroup">
         <input
           type="text"
           placeholder="Jobtitel"
@@ -219,27 +212,26 @@ return (
           onChange={(e) => setjob(e.target.value)}
         />
 
-        <input
-          type="text"
-          placeholder="Unternehmen"
-          value={company}
-          onChange={(e) => setcompany(e.target.value)}
-        />
-
-        <button className="primaryButton" onClick={addjob}>
+        <button onClick={addjob}>
           Job hinzufügen
         </button>
-      </div>
 
-      <div className="authGroup">
+        <div className="jobs">
+          {jobs.map((job) => (
+            <article key={job.id}>
+              <h2>{job.title}</h2>
+            </article>
+          ))}
+        </div>
+      </div>
+    ) : (
+      <div>
         <input
           type="email"
           placeholder="E-Mail"
           value={email}
           onChange={(e) => setemail(e.target.value)}
         />
-
-        <div>
 
         <input
           type={showpassword ? "text" : "password"}
@@ -248,45 +240,16 @@ return (
           onChange={(e) => setpassword(e.target.value)}
         />
 
-        <button onClick={ () => setshowpassword(prev => !prev)}>{showpassword ? "verbergen" : "anzeigen"}</button>
-        </div>
-
-        <button className="secondaryButton" onClick={register}>
+        <button onClick={register}>
           Registrieren
         </button>
 
-        <button className="ghostButton" onClick={login}>
+        <button onClick={login}>
           Einloggen
         </button>
       </div>
-
-      {error && (
-      <p>{error}</p>
-      )}
-
-      <div className="jobs">
-  {jobs.map((job, index) => (
-  <article className="jobCard" key={index}>
-    <div>
-      <h2>{job.title}</h2>
-      <p>{job.company}</p>
-    </div>
-
-    <select
-      value={job.status}
-      onChange={(e) => updateStatus(job.id, e.target.value)}
-    >
-      <option value="pendent">Pendent</option>
-      <option value="interview">Interview</option>
-      <option value="absage">Absage</option>
-    </select>
-
-    <button onClick={(id: number)=> deletejob(id)}>delete</button>
-  </article>
-))}
-      </div>
-    </section>
-  </main>
+    )}
+  </>
 );
 }
 
