@@ -24,6 +24,7 @@ const [showpassword, setshowpassword] = useState<boolean>(false)
 
 const API = "https://my-fullstack-app-production-30fe.up.railway.app"
 
+console.log(toggle)
 
 const deletejob = async (id: number) => {
 const token = localStorage.getItem("token");
@@ -212,6 +213,11 @@ return (
           onChange={(e) => setjob(e.target.value)}
         />
 
+        <input type="text" 
+        placeholder="company"
+        value={company}
+        onChange={(e) => setcompany(e.target.value)}/>
+
         <button onClick={addjob}>
           Job hinzufügen
         </button>
@@ -220,6 +226,10 @@ return (
           {jobs.map((job) => (
             <article key={job.id}>
               <h2>{job.title}</h2>
+               <button onClick={() => deletejob(job.id)}>delete</button>
+
+               <button onClick={() => updateStatus(job.id, job.status)}>status ändern</button>
+
             </article>
           ))}
         </div>
@@ -240,6 +250,8 @@ return (
           onChange={(e) => setpassword(e.target.value)}
         />
 
+        <button onClick={() => !setshowpassword}>toggle</button>
+
         <button onClick={register}>
           Registrieren
         </button>
@@ -247,6 +259,10 @@ return (
         <button onClick={login}>
           Einloggen
         </button>
+
+        {error &&(
+        <p>{error}</p>
+        ) }
       </div>
     )}
   </>
