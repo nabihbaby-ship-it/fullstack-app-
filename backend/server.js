@@ -48,6 +48,18 @@ function verifyToken(req, res, next) {
   }
 }
 
+app.delete("/api/jobs/:id", verifyToken, async (req, res) => {
+
+const {id} = req.params;
+
+await pool.query(`
+  
+DELETE FROM jobs WHERE id = $1 AND user_id = $2`, 
+[id, req.user.id]);
+
+res.json({message: "job gelöscht"})
+});
+
 app.patch("/api/jobs/:id", verifyToken, async (req, res) => {
   const { status } = req.body;
   const { id } = req.params;

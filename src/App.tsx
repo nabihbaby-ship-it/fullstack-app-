@@ -19,9 +19,27 @@ const [password, setpassword] = useState<string>("")
 const [error, seterror] = useState<string>("")
 const [toggle, settoggle] = useState<boolean>(false)
 const [showpassword, setshowpassword] = useState<boolean>(false)
-const [status, setstatus] = useState<string>("pendent")
+
  
 const API = "https://my-fullstack-app-production-30fe.up.railway.app"
+
+
+const deletejob = async (id: number) => {
+const token = localStorage.getItem("token");
+
+if (!token) return
+
+const response = await fetch(`${API}/api/jobs/${id}`,{
+
+method: "DELETE",
+headers: {Authorization: `Bearer ${token}`},
+
+});
+
+if (!response.ok) return;
+
+setjobs((prev) => prev.filter((job) => job.id !== id  ))
+}
 
 const updateStatus = async (id: number, status: string) => {
   const token = localStorage.getItem("token");
@@ -182,8 +200,6 @@ const login = async () => {
 
 return (
 
-  
-
   <main className="page">
     <section className="card">
       <div className="header">
@@ -235,7 +251,6 @@ return (
         <button onClick={ () => setshowpassword(prev => !prev)}>{showpassword ? "verbergen" : "anzeigen"}</button>
         </div>
 
-
         <button className="secondaryButton" onClick={register}>
           Registrieren
         </button>
@@ -265,6 +280,8 @@ return (
       <option value="interview">Interview</option>
       <option value="absage">Absage</option>
     </select>
+
+    <button onClick={(id: number)=> deletejob(id)}>delete</button>
   </article>
 ))}
       </div>
