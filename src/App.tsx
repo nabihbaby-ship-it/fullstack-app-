@@ -224,6 +224,7 @@ return (
 
         <div className="jobs">
           {jobs.map((job) => (
+
             <article key={job.id}>
               <h2>{job.title}</h2>
               <p>{job.company}</p>
@@ -235,7 +236,7 @@ return (
                 }
               >
                 <option value="pendent">Pendent</option>
-                <option value="interview">Interview</option>
+                <option value="interview">Interview</option> 
                 <option value="absage">Absage</option>
               </select>
 
