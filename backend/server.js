@@ -48,6 +48,23 @@ function verifyToken(req, res, next) {
   }
 }
 
+app.patch("/api/jobs/:id", verifyToken, async (req, res) => {
+  const { status } = req.body;
+  const { id } = req.params;
+
+  const result = await pool.query(
+    `
+    UPDATE jobs
+    SET status = $1
+    WHERE id = $2 AND user_id = $3
+    RETURNING *
+    `,
+    [status, id, req.user.id]
+  );
+
+  res.json(result.rows[0]);
+});
+
 app.post("/api/jobs", verifyToken, async (req, res) => {
   try {
     const { company, title, status } = req.body;

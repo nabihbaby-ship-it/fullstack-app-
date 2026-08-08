@@ -5,7 +5,8 @@ type Job = {
 
 company: string,
 title: string,
-status: string
+status: string,
+id: number
 }
 
 function App () {
@@ -18,8 +19,30 @@ const [password, setpassword] = useState<string>("")
 const [error, seterror] = useState<string>("")
 const [toggle, settoggle] = useState<boolean>(false)
 const [showpassword, setshowpassword] = useState<boolean>(false)
+const [status, setstatus] = useState<string>("pendent")
  
 const API = "https://my-fullstack-app-production-30fe.up.railway.app"
+
+const updateStatus = async (id: number, status: string) => {
+  const token = localStorage.getItem("token");
+
+  const response = await fetch(`${API}/api/jobs/${id}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`
+    },
+    body: JSON.stringify({ status })
+  });
+
+  if (!response.ok) return;
+
+  setjobs((prev) =>
+    prev.map((job) =>
+      job.id === id ? { ...job, status } : job
+    )
+  );
+};
 
 const addjob = async () => {
 
@@ -58,7 +81,7 @@ const data = await response.json()
 
 console.log(data)
 
-setjobs([...jobs, newjob])
+setjobs([...jobs, data])
 
 }
 
@@ -227,16 +250,23 @@ return (
       )}
 
       <div className="jobs">
-        {jobs.map((job, index) => (
-          <article className="jobCard" key={index}>
-            <div>
-              <h2>{job.title}</h2>
-              <p>{job.company}</p>
-            </div>
+  {jobs.map((job, index) => (
+  <article className="jobCard" key={index}>
+    <div>
+      <h2>{job.title}</h2>
+      <p>{job.company}</p>
+    </div>
 
-            <span>{job.status}</span>
-          </article>
-        ))}
+    <select
+      value={job.status}
+      onChange={(e) => updateStatus(job.id, e.target.value)}
+    >
+      <option value="pendent">Pendent</option>
+      <option value="interview">Interview</option>
+      <option value="absage">Absage</option>
+    </select>
+  </article>
+))}
       </div>
     </section>
   </main>
