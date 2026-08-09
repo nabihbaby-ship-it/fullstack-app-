@@ -17,6 +17,8 @@ chrome.storage.local.get("token", (data) => {if (data.token){
 else {
 
   login.style.display = "block"
+
+  popup.style.display = "block"
 }})
 
 const getJobFromLinkedIn = () => {
