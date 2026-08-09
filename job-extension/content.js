@@ -1,5 +1,6 @@
 console.log("content script läuft")
 
+
 const host = window.location.hostname
 
 const getjobfromindeed = () => {
@@ -20,6 +21,10 @@ status: "saved"
 }
 
 const getlinkedinjob = () => {
+
+setTimeout(() => {
+  console.log(document.querySelector("h1"));
+}, 3000);
 
 const job = document.querySelector("h1")?.innerText || ""
 
