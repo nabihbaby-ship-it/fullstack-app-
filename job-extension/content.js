@@ -1,4 +1,6 @@
 console.log("content script läuft")
+console.log(window.location.href)
+document.querySelector("h1")
 
 
 const host = window.location.hostname
@@ -25,6 +27,10 @@ const getlinkedinjob = () => {
 setTimeout(() => {
   console.log(document.querySelector("h1"));
 }, 3000);
+
+console.log("URL:", window.location.href);
+console.log("Body vorhanden:", !!document.body);
+console.log("H1:", document.querySelector("h1"));
 
 const job = document.querySelector("h1")?.innerText || ""
 
