@@ -43,6 +43,8 @@ const getJobFromLinkedIn = () => {
         { type: "GET_JOB" },
         async (response) => {
 
+          console.log("HOST:", host)
+
           if (!response) {
           console.log("keine daten von content script erhalten")
           return;}

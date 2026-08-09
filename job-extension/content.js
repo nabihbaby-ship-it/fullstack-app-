@@ -61,6 +61,12 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   const job = getjobfromindeed()
   sendResponse(job)
   }
+
+  else {
+
+  console.log("nicht unterstützte seite:", host);
+  sendResponse(null)
+  }
   
   return true
 
