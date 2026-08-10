@@ -1,6 +1,6 @@
 console.log("content script läuft")
 console.log(window.location.href)
-document.querySelector("h1")
+console.log(document.querySelector("h1"))
 
 
 const host = window.location.hostname

@@ -5,6 +5,8 @@ import cors from "cors";
 import jwt from "jsonwebtoken";
 import pool from "./db.js";
 import bcrypt from "bcryptjs"
+import crypto from "crypto"
+import { useRouteLoaderData } from "react-router-dom";
 
 const app = express();
 
@@ -48,6 +50,37 @@ function verifyToken(req, res, next) {
     });
   }
 }
+
+app.post("/api/forgot-password", async(req, res) => {
+
+const { email } = req.body
+
+const user = await pool.query("SELECT id FROM users WHERE email = $1",
+[email]
+);
+
+if(user.rows.length === 0) {
+return res.status(404).json({
+message: "benutzer nicht gefunden"
+})
+}
+
+const token = crypto.randomBytes(32).toString("hex")
+
+await pool.query(`INSERT INTO password_resets
+(user_id, token, expires_at)
+VALUES ($1, $2, NOW() + INTERVAL '1 hour')`, 
+
+
+[user.rows[0].id, token])
+
+console.log(token)
+
+return res.json({
+
+message: "reset-token erstellt"
+})
+})
 
 app.delete("/api/jobs/:id", verifyToken, async (req, res) => {
 
