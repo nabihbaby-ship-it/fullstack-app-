@@ -26,6 +26,24 @@ const API = "https://my-fullstack-app-production-30fe.up.railway.app"
 
 console.log(toggle)
 
+const passwortvergessen = async () => {
+
+const response = await fetch(`${API}/api/forgot-password`, {
+
+method: "POST",
+headers: {
+"Content-type": "application/json"
+},
+body: JSON.stringify({email})
+});
+
+if (!response.ok) return
+
+const data = await response.json()
+
+console.log(data.message)
+}
+
 const deletejob = async (id: number) => {
 const token = localStorage.getItem("token");
 
@@ -279,6 +297,7 @@ return (
         <button onClick={login}>
           Einloggen
         </button>
+
 
         {error && <p>{error}</p>}
       </div>
