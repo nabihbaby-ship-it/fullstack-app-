@@ -245,6 +245,8 @@ return (
           Job hinzufügen
         </button>
 
+        <button onClick={() => passwortvergessen}>passwort vergessen</button>
+
         <div className="jobs">
           {jobs.map((job) => (
 
