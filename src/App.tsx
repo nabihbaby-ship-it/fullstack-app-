@@ -119,6 +119,9 @@ body: JSON.stringify(newjob)
 
 })
 
+setjob("");
+setcompany("")
+
 
 const data = await response.json()
 
