@@ -1,73 +1,92 @@
-# React + TypeScript + Vite
+# Job Tracker
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Ein Full-Stack Job Tracker zum Verwalten von Bewerbungen.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Benutzerregistrierung und Login
+- JWT-Authentifizierung
+- Passwort-Hashing mit bcrypt
+- Bewerbungen erstellen
+- Bewerbungen löschen
+- Bewerbungsstatus ändern
+  - Pendent
+  - Interview
+  - Absage
+- PostgreSQL Datenbank
+- Chrome Extension zum Speichern von LinkedIn-Jobs
 
-## React Compiler
+## Live Demo
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Frontend:
+https://deine-vercel-url.vercel.app
 
-## Expanding the ESLint configuration
+## Chrome Extension
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Die Chrome Extension ermöglicht das Speichern von LinkedIn-Jobs direkt in den Job Tracker.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### Installation
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+1. Repository herunterladen
+2. ZIP entpacken
+3. Chrome öffnen
+4. `chrome://extensions` aufrufen
+5. Entwicklermodus aktivieren
+6. Auf "Entpackte Erweiterung laden" klicken
+7. Den Extension-Ordner auswählen
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### Verwendung
+
+1. Bei LinkedIn anmelden
+2. Eine Jobseite öffnen
+3. Die Extension öffnen
+4. Auf "Job speichern" klicken
+5. Der Job wird automatisch im Dashboard gespeichert
+
+## Tech Stack
+
+### Frontend
+
+- React
+- TypeScript
+- Vite
+
+### Backend
+
+- Node.js
+- Express
+
+### Datenbank
+
+- PostgreSQL
+- Neon
+
+### Deployment
+
+- Vercel
+- Railway
+
+### Authentication
+
+- JWT
+- bcrypt
+
+## Projektstruktur
+
+```txt
+frontend/
+backend/
+extension/
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Screenshots
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Hier kannst du später Screenshots vom Dashboard und der Extension einfügen.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## Motivation
+
+Dieses Projekt wurde entwickelt, um den gesamten Bewerbungsprozess an einem Ort zu verwalten und LinkedIn-Jobs mit einer Chrome Extension direkt zu speichern.
+
+## Autor
+
+Youssouf
