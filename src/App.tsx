@@ -248,6 +248,19 @@ return (
           Job hinzufügen
         </button>
 
+      <div>
+        <input type="text"
+        placeholder="email"
+        value={email}
+        onChange={(e) => setemail(e.target.value)}/>
+
+        <input type="text" 
+        placeholder="password"
+        value={password}
+        onChange={(e) => setpassword(e.target.value)}/>
+        <button>token erneuern</button>
+      </div>
+
         <button onClick={() => passwortvergessen}>passwort vergessen</button>
 
         <div className="jobs">
