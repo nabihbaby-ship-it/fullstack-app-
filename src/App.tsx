@@ -254,11 +254,12 @@ return (
         value={email}
         onChange={(e) => setemail(e.target.value)}/>
 
-        <input type="text" 
+        <input type="password" 
         placeholder="password"
         value={password}
         onChange={(e) => setpassword(e.target.value)}/>
-        <button>token erneuern</button>
+
+        <button onClick={() => login}>token erneuern</button>
       </div>
 
         <button onClick={() => passwortvergessen}>passwort vergessen</button>
