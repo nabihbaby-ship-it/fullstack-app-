@@ -66,11 +66,16 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   
   if (host.includes("linkedin")) {
 
+    console.log("1 linkedin erkannt")
+
     const job = getlinkedinjob()
 
-    console.log("job gefunden:", job)
+    console.log("2 getlinkedinjob beendet")
+    console.log("3 job gefunden:", job)
 
   sendResponse(job)
+  
+  console.log("response gesendet")
   }
 
   else if (host.includes("indeed")) {
