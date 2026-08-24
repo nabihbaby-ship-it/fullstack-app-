@@ -1,6 +1,6 @@
 console.log("content script läuft")
 console.log(window.location.href)
-console.log(document.querySelector("h1"))
+document.querySelectorAll("h1, h2, h3").forEach(e => console.log(e.innerText))
 
 
 const host = window.location.hostname
@@ -74,7 +74,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     console.log("3 job gefunden:", job)
 
   sendResponse(job)
-  
+
   console.log("response gesendet")
   }
 
