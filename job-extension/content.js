@@ -1,7 +1,14 @@
 console.log("content script läuft")
 console.log(window.location.href)
-document.querySelectorAll("h1, h2, h3").forEach(e => console.log(e.innerText))
+console.log("CONTENT SCRIPT START");
 
+const elements = document.querySelectorAll("h1, h2, h3");
+
+console.log("Anzahl gefunden:", elements.length);
+
+elements.forEach((e, index) => {
+  console.log("ELEMENT", index, ":", e.innerText);
+});
 
 const host = window.location.hostname
 
