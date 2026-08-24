@@ -58,6 +58,8 @@ createdat: Date.now()
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
+  console.log("message erhalten", request)
+
   console.log("HOST:", host)
 
   if (request.type !== "GET_JOB") return
