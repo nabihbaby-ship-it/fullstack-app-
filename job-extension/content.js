@@ -2,14 +2,6 @@ console.log("content script läuft")
 console.log(window.location.href)
 console.log("CONTENT SCRIPT START");
 
-const elements = document.querySelectorAll("h1, h2, h3");
-
-console.log("Anzahl gefunden:", elements.length);
-
-elements.forEach((e, index) => {
-  console.log("ELEMENT", index, ":", e.innerText);
-});
-
 const host = window.location.hostname
 
 const getjobfromindeed = () => {
@@ -39,7 +31,7 @@ console.log("URL:", window.location.href);
 console.log("Body vorhanden:", !!document.body);
 console.log("H1:", document.querySelector("h1"));
 
-const job = document.querySelector("h1")?.innerText || ""
+const job = document.querySelector("a._5ecc2880.e5cee6d8")?.innerText?.trim() || "";
 
 const url = window.location.href
 
@@ -65,20 +57,14 @@ createdat: Date.now()
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
-  console.log("message erhalten", request)
-
   console.log("HOST:", host)
 
   if (request.type !== "GET_JOB") return
   
   if (host.includes("linkedin")) {
 
-    console.log("1 linkedin erkannt")
-
     const job = getlinkedinjob()
 
-    console.log("2 getlinkedinjob beendet")
-    console.log("3 job gefunden:", job)
 
   sendResponse(job)
 
