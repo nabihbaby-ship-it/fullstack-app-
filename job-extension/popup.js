@@ -61,6 +61,8 @@ const getJobFromLinkedIn = () => {
             }
           );
 
+          console.log(apiresponse)
+
           if(!apiresponse.ok) {
           console.log("fehler beim speichern")
           return
