@@ -8,6 +8,16 @@ const API = "https://my-fullstack-app-production-30fe.up.railway.app";
 console.log(login)
 console.log(job)
 
+chrome.storage.local.get("token", (data) => {
+
+  if (!data.token) {
+    showLogin();
+    return;
+  }
+
+  showJobButton();
+});
+
 
 const getJobFromLinkedIn = () => {
 
@@ -103,15 +113,41 @@ const showJobButton = () => {
   job.style.display = "block";
 };
 
-chrome.storage.local.get("token", (data) => {
+const getin = async () => {
+  console.log("gestartet");
 
-  if (!data.token) {
-    showLogin();
+  const password = document.getElementById("password").value;
+  const email = document.getElementById("email").value;
+
+  const response = await fetch(`${API}/api/login`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ email, password })
+  });
+
+  if (!response.ok) {
+    console.error("Login fehlgeschlagen");
     return;
   }
 
+  const data = await response.json();
+
+  const token = data.token;
+
+  if (!token) {
+    console.error("Token nicht verfügbar");
+    return;
+  }
+
+  // DAS ist wichtig:
+  chrome.storage.local.set({ token });
+
   showJobButton();
-});
+
+  console.log("eingeloggt");
+};
 
 document.getElementById("savejob").addEventListener("click", getJobFromLinkedIn)
 
