@@ -33,6 +33,8 @@ console.log("H1:", document.querySelector("h1"));
 
 const job = document.querySelector("a._5ecc2880.e5cee6d8")?.innerText?.trim() || "";
 
+console.log("job nach 3 sekunden", job)
+
 const url = window.location.href
 
 const source = window.location.hostname
@@ -75,6 +77,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   else if (host.includes("indeed")) {
 
   const job = getjobfromindeed()
+
   sendResponse(job)
   }
 
