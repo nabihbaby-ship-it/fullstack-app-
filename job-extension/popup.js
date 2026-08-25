@@ -61,12 +61,12 @@ const getJobFromLinkedIn = () => {
             }
           );
 
-          console.log(apiresponse)
+          console.log("status:", apiresponse.status)
 
-          if(!apiresponse.ok) {
-          console.log("fehler beim speichern")
-          return
-          }
+          const text = await apiresponse.text()
+
+          console.log("server", text )
+
 
           const data = await apiresponse.json();
 
