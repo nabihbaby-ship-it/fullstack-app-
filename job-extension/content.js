@@ -3,7 +3,7 @@ console.log(window.location.href)
 console.log("CONTENT SCRIPT START");
 
 const host = window.location.hostname
-document.querySelector("a._5ecc2880.e5cee6d8")
+
 
 const getjobfromindeed = () => {
 
@@ -24,26 +24,45 @@ status: "saved"
 
 const getlinkedinjob = () => {
 
-  console.log("=== GET LINKEDIN JOB ===");
+  console.log("GET LINKEDIN JOB");
 
-  const jobElement = document.querySelector(
-    "a._5ecc2880.e5cee6d8"
+  const elements = [
+    ...document.querySelectorAll("span")
+  ];
+
+  const jobElement = elements.find(
+    element =>
+      element.innerText?.trim() === "Mobile Design Engineer"
   );
 
   console.log("JOB ELEMENT:", jobElement);
 
-  if (jobElement) {
-    console.log("JOB TEXT:", jobElement.innerText);
+  const job = jobElement?.innerText?.trim() || "";
+
+  console.log("JOB:", job);
+
+  if (!job) {
+    console.log("kein jobtitel gefunden");
+    return null;
   }
 
-  return jobElement
-    ? {
-        title: jobElement.innerText.trim(),
-        url: jobElement.href,
-        source: window.location.hostname,
-        status: "saved"
-      }
-    : null;
+  const url = window.location.href;
+  const source = window.location.hostname;
+
+  const company =
+    document
+      .querySelector(".job-details-jobs-unified-top-card__company-name")
+      ?.textContent
+      ?.trim() || "";
+
+  return {
+    title: job,
+    url,
+    source,
+    company,
+    status: "saved",
+    createdat: Date.now()
+  };
 };
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
