@@ -67,12 +67,16 @@ const getJobFromLinkedIn = () => {
           { type: "GET_JOB" },
           async (response) => {
 
+            console.log("response vom content script", response)
+
             if (chrome.runtime.lastError) {
               console.error(
                 chrome.runtime.lastError.message
               );
               return;
             }
+
+           
 
             if (!response) {
               console.log(
@@ -97,13 +101,9 @@ const getJobFromLinkedIn = () => {
                 }
               );
 
-              console.log(
-                "status:",
-                apiresponse.status
-              );
+              console.log("status:",apiresponse.status);
 
-              const text =
-                await apiresponse.text();
+              const text =await apiresponse.text();
 
               console.log("server:", text);
 
@@ -113,9 +113,7 @@ const getJobFromLinkedIn = () => {
 
                 showLogin();
 
-                console.log(
-                  "Token ungültig"
-                );
+                console.log( "Token ungültig");
 
                 return;
               }
@@ -144,11 +142,9 @@ const getin = async () => {
 
   console.log("gestartet");
 
-  const password =
-    document.getElementById("password").value;
+  const password = document.getElementById("password").value;
 
-  const email =
-    document.getElementById("email").value;
+  const email =  document.getElementById("email").value;
 
   try {
 

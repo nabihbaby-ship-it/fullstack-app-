@@ -65,6 +65,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
     const job = getlinkedinjob()
 
+    console.log("job vor sendresponse", job)
 
   sendResponse(job)
 
