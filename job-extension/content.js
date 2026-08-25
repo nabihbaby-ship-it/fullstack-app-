@@ -3,6 +3,7 @@ console.log(window.location.href)
 console.log("CONTENT SCRIPT START");
 
 const host = window.location.hostname
+document.querySelector("a._5ecc2880.e5cee6d8")
 
 const getjobfromindeed = () => {
 
@@ -23,39 +24,27 @@ status: "saved"
 
 const getlinkedinjob = () => {
 
-setTimeout(() => {
-  console.log(document.querySelector("h1"));
-}, 3000);
+  console.log("=== GET LINKEDIN JOB ===");
 
-console.log("URL:", window.location.href);
-console.log("Body vorhanden:", !!document.body);
-console.log("H1:", document.querySelector("h1"));
+  const jobElement = document.querySelector(
+    "a._5ecc2880.e5cee6d8"
+  );
 
-const job = document.querySelector("a._5ecc2880.e5cee6d8")?.innerText?.trim() || "";
+  console.log("JOB ELEMENT:", jobElement);
 
-console.log("job nach 3 sekunden", job)
+  if (jobElement) {
+    console.log("JOB TEXT:", jobElement.innerText);
+  }
 
-const url = window.location.href
-
-const source = window.location.hostname
-    
-const company = document.querySelector(".job-details-jobs-unified-top-card__company-name")?.textContent?.trim() || ""  
-
-if(!job) {
-
-console.log("kein jobtitel gefunden")
-return null
-}
-
-return{
-title: job,
-url,
-source,
-company,
-status: "saved",
-createdat: Date.now()
-}
-}
+  return jobElement
+    ? {
+        title: jobElement.innerText.trim(),
+        url: jobElement.href,
+        source: window.location.hostname,
+        status: "saved"
+      }
+    : null;
+};
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
