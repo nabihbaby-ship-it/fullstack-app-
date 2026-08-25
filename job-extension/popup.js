@@ -1,12 +1,31 @@
 
 const login = document.getElementById("login");
 const job = document.getElementById("job");
-const popup = document.getElementById("popupnachricht")
+const popup = document.getElementById("popupnachricht");
 
 const API = "https://my-fullstack-app-production-30fe.up.railway.app";
 
-console.log(login)
-console.log(job)
+
+// -------------------------
+// UI
+// -------------------------
+
+const showLogin = () => {
+  login.style.display = "block";
+  popup.style.display = "block";
+  job.style.display = "none";
+};
+
+const showJobButton = () => {
+  login.style.display = "none";
+  popup.style.display = "none";
+  job.style.display = "block";
+};
+
+
+// -------------------------
+// Beim Start prüfen
+// -------------------------
 
 chrome.storage.local.get("token", (data) => {
 
@@ -19,138 +38,196 @@ chrome.storage.local.get("token", (data) => {
 });
 
 
+// -------------------------
+// Job von LinkedIn holen
+// -------------------------
+
 const getJobFromLinkedIn = () => {
 
   chrome.storage.local.get("token", async (search) => {
 
-     const token = search.token;
+    const token = search.token;
 
-    if(!token) {
-    
-    console.log("kein token vorhanden")
-    return
+    if (!token) {
+      console.log("kein token vorhanden");
+      showLogin();
+      return;
     }
- 
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
 
-      const tab = tabs[0];
-      if (!tab?.id) return;
+    chrome.tabs.query(
+      { active: true, currentWindow: true },
+      (tabs) => {
 
-      chrome.tabs.sendMessage(
-        tab.id,
-        { type: "GET_JOB" },
-        async (response) => {
+        const tab = tabs[0];
 
-          if (!response) {
-          console.log("keine daten von content script erhalten")
-          return;}
+        if (!tab?.id) return;
 
-          console.log("response:", response);
+        chrome.tabs.sendMessage(
+          tab.id,
+          { type: "GET_JOB" },
+          async (response) => {
 
-          const apiresponse = await fetch(
-            `${API}/api/jobs`,
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`
-              },
-              body: JSON.stringify(response)
+            if (chrome.runtime.lastError) {
+              console.error(
+                chrome.runtime.lastError.message
+              );
+              return;
             }
-          );
 
-          console.log("status:", apiresponse.status)
+            if (!response) {
+              console.log(
+                "keine daten von content script erhalten"
+              );
+              return;
+            }
 
-          const text = await apiresponse.text()
+            console.log("response:", response);
 
-          console.log("server", text)
+            try {
 
+              const apiresponse = await fetch(
+                `${API}/api/jobs`,
+                {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
+                  },
+                  body: JSON.stringify(response)
+                }
+              );
 
-          const data = await apiresponse.json();
+              console.log(
+                "status:",
+                apiresponse.status
+              );
 
-          console.log(data);
+              const text =
+                await apiresponse.text();
 
-        }
-      );
-    });
+              console.log("server:", text);
 
+              if (apiresponse.status === 401) {
+
+                chrome.storage.local.remove("token");
+
+                showLogin();
+
+                console.log(
+                  "Token ungültig"
+                );
+
+                return;
+              }
+
+            } catch (error) {
+
+              console.error(
+                "Fehler beim Speichern:",
+                error
+              );
+
+            }
+          }
+        );
+      }
+    );
   });
-
 };
 
 
-
-const password = document.getElementById("password").value
-const email = document.getElementById("email").value
-
-const response = await fetch(`${API}/api/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ email, password })
-    });
-
-  if(!response.ok) {
-  console.error("login fehlgeschlagen")
-
-  return
-  }
-
-  const data = await response.json()
-
-  const token = data.token
-
- const showLogin = () => {
-  login.style.display = "block";
-  popup.style.display = "block";
-  job.style.display = "none";
-};
-
-const showJobButton = () => {
-  login.style.display = "none";
-  popup.style.display = "none";
-  job.style.display = "block";
-};
+// -------------------------
+// Login
+// -------------------------
 
 const getin = async () => {
+
   console.log("gestartet");
 
-  const password = document.getElementById("password").value;
-  const email = document.getElementById("email").value;
+  const password =
+    document.getElementById("password").value;
 
-  const response = await fetch(`${API}/api/login`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({ email, password })
-  });
+  const email =
+    document.getElementById("email").value;
 
-  if (!response.ok) {
-    console.error("Login fehlgeschlagen");
-    return;
+  try {
+
+    const response = await fetch(
+      `${API}/api/login`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          email,
+          password
+        })
+      }
+    );
+
+    if (!response.ok) {
+
+      console.error(
+        "Login fehlgeschlagen"
+      );
+
+      return;
+    }
+
+    const data =
+      await response.json();
+
+    const token = data.token;
+
+    if (!token) {
+
+      console.error(
+        "Token nicht verfügbar"
+      );
+
+      return;
+    }
+
+    chrome.storage.local.set(
+      { token },
+      () => {
+
+        showJobButton();
+
+        console.log(
+          "eingeloggt"
+        );
+
+      }
+    );
+
+  } catch (error) {
+
+    console.error(
+      "Login Fehler:",
+      error
+    );
+
   }
-
-  const data = await response.json();
-
-  const token = data.token;
-
-  if (!token) {
-    console.error("Token nicht verfügbar");
-    return;
-  }
-
-  // DAS ist wichtig:
-  chrome.storage.local.set({ token });
-
-  showJobButton();
-
-  console.log("eingeloggt");
 };
 
-document.getElementById("savejob").addEventListener("click", getJobFromLinkedIn)
 
-document.getElementById("loginbutton").addEventListener("click", getin)
+// -------------------------
+// Buttons
+// -------------------------
 
+document
+  .getElementById("savejob")
+  .addEventListener(
+    "click",
+    getJobFromLinkedIn
+  );
+
+document
+  .getElementById("loginbutton")
+  .addEventListener(
+    "click",
+    getin
+  );
 
