@@ -24,36 +24,31 @@ status: "saved"
 
 const getlinkedinjob = () => {
 
-  console.log("GET LINKEDIN JOB");
+  console.log("URL:", window.location.href);
+  console.log("Body vorhanden:", !!document.body);
 
-  const elements = [
-    ...document.querySelectorAll("span")
-  ];
-
-  const jobElement = elements.find(
-    element =>
-      element.innerText?.trim() === "Mobile Design Engineer"
+  const jobElement = document.querySelector(
+    'a.ecc291b8._5ceadcfe'
   );
 
-  console.log("JOB ELEMENT:", jobElement);
+  console.log("Job Element:", jobElement);
 
   const job = jobElement?.innerText?.trim() || "";
 
-  console.log("JOB:", job);
-
-  if (!job) {
-    console.log("kein jobtitel gefunden");
-    return null;
-  }
+  console.log("Job:", job);
 
   const url = window.location.href;
   const source = window.location.hostname;
 
   const company =
-    document
-      .querySelector(".job-details-jobs-unified-top-card__company-name")
-      ?.textContent
-      ?.trim() || "";
+    document.querySelector(
+      ".job-details-jobs-unified-top-card__company-name"
+    )?.textContent?.trim() || "";
+
+  if (!job) {
+    console.log("kein jobtitel gefunden");
+    return null;
+  }
 
   return {
     title: job,
